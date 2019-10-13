@@ -1,5 +1,4 @@
-import pandas as pd
+from airlines_analysis.analysis import Analysis
 
-def read_data(path):
-    return pd.read_csv(path)
-
+analysis = Analysis()
+analysis.run()
