@@ -39,23 +39,23 @@ class PreprocessingMixin:
             2, 'sentiment', df['airline_sentiment'].apply(sentiment_to_scalar))
         return converted_df
 
-
-    def remove_stopwords(self, input_text):
-        stopwords_list = stopwords.words('english')
-        # Some words which might indicate a certain sentiment are kept via a whitelist
-        whitelist = ["n't", "not", "no"]
-        words = input_text.split() 
-        clean_words = [word for word in words if (word not in stopwords_list or word in whitelist) and len(word) > 1] 
-        return " ".join(clean_words)
-
-
+    def remove_stopwords(self, df):
+        def _remove_stop_word(data):
+            stopwords_list = stopwords.words('english')
+            whitelist = ["n't", "not", "no"]
+            words = data.split()
+            clean_words = [word for word in words if (word not in stopwords_list or word in whitelist) and len(word) > 1]
+            return " ".join(clean_words)
+        cleaned_df = df.copy()
+        cleaned_df.loc[:,'text_final'] = df.text_final.apply(_remove_stop_word)
+        return cleaned_df
 
     def preprocessing(self, df):
         confident_df = self.remove_unconfident_sentiment(df)
         web_cleaned_df = self.remove_html_and_tweet_tags(confident_df)
-        web_cleaned_df.text_final = web_cleaned_df.text_final.apply(remove_stopwords)
-        return self.convert_sentiment_to_scalar(web_cleaned_df)
-    
+        cleaned_words_df = self.remove_stopwords(web_cleaned_df)
+        return self.convert_sentiment_to_scalar(cleaned_words_df)
+
     def get_train_test(self, df):
         train, test = train_test_split(df, test_size=0.2, random_state=1)
         X_train = train['text_final'].values
