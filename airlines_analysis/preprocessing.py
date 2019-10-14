@@ -6,6 +6,12 @@ from nltk.corpus import stopwords
 
 
 class PreprocessingMixin:
+    """
+        Class that holds all the code for pre processing functions
+        that we will use in the project. We will find specific 
+        functions to work with out data and general functions that 
+        works in any kind of data
+    """
     def remove_unconfident_sentiment(self, df):
         return df[df["airline_sentiment:confidence"] >= 0.60]
 
