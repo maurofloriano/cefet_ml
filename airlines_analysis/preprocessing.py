@@ -8,8 +8,8 @@ from nltk.corpus import stopwords
 class PreprocessingMixin:
     """
         Class that holds all the code for pre processing functions
-        that we will use in the project. We will find specific 
-        functions to work with out data and general functions that 
+        that we will use in the project. We will find specific
+        functions to work with out data and general functions that
         works in any kind of data
     """
     def remove_unconfident_sentiment(self, df):
@@ -61,11 +61,3 @@ class PreprocessingMixin:
         web_cleaned_df = self.remove_html_and_tweet_tags(confident_df)
         cleaned_words_df = self.remove_stopwords(web_cleaned_df)
         return self.convert_sentiment_to_scalar(cleaned_words_df)
-
-    def get_train_test(self, df):
-        train, test = train_test_split(df, test_size=0.2, random_state=1)
-        X_train = train['text_final'].values
-        X_test = test['text_final'].values
-        y_train = train['sentiment']
-        y_test = test['sentiment']
-        return X_train, X_test, y_train, y_test
