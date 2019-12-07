@@ -1,4 +1,4 @@
-from wordcloud import WordCloud,STOPWORDS
+from wordcloud import WordCloud, STOPWORDS
 
 class WordAnalysis:
     """
@@ -6,8 +6,12 @@ class WordAnalysis:
         of the meaning of the tweets and data.
     """
 
-    def get_word_cloud(self, df, sentiment):
+    def get_word_cloud(self, df, sentiment, airline=None):
         df_final = df[df['sentiment'] == sentiment]
+
+        if airline:
+            df_final = df[df['airline'] == airline]
+
 
         words = words = ' '.join(df_final['text_final'])
 
