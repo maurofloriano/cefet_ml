@@ -1,8 +1,10 @@
 from nltk.tokenize import TweetTokenizer
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.model_selection import train_test_split
-from sklearn.naive_bayes import BernoulliNB
+from sklearn.naive_bayes import BernoulliNB, GaussianNB
 from sklearn.tree import DecisionTreeClassifier
+from sklearn.ensemble import AdaBoostClassifier
+
 
 
 class Processing:
@@ -11,7 +13,7 @@ class Processing:
         algorithms that we will run and validations.
     """
 
-    MODELS = [DecisionTreeClassifier, BernoulliNB]
+    MODELS = [DecisionTreeClassifier, BernoulliNB, GaussianNB, AdaBoostClassifier]
 
     def tokenize(self, text):
         tknzr = TweetTokenizer()
