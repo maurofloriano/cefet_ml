@@ -4,7 +4,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.naive_bayes import BernoulliNB, GaussianNB
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import AdaBoostClassifier
-
+from sklearn.model_selection import KFold
 
 
 class Processing:
@@ -42,5 +42,26 @@ class Processing:
             c_model.fit(train_features.toarray(), y_train)
             y_pred = c_model.predict(test_features.toarray())
             results[c_model.__class__.__name__] = {"y_true": y_test, "y_pred": y_pred}
+
+        return results
+
+    def cross_validation(self, df):
+        X_train, X_test, y_train, y_test = self.get_train_test(df)
+        kf = KFold(n_splits=5, random_state=None)
+
+        results = {}
+        for class_model in self.MODELS:
+            for index, (train_index, test_index) in enumerate(kf.split(X_train)):
+                X_train_split, X_test_split = X_train[train_index], X_train[test_index]
+                y_train_split, y_test_split = y_train.array[train_index], y_train.array[test_index]
+                count_vectorizer = self.get_count_vectorizer()
+                train_features = count_vectorizer.fit_transform(X_train_split)
+                test_features = count_vectorizer.transform(X_test_split)
+                c_model = class_model()
+                c_model.fit(train_features.toarray(), y_train_split)
+                y_pred = c_model.predict(test_features.toarray())
+                if not results.get(index):
+                    results[index] = {}
+                results[index][c_model.__class__.__name__] = {"y_true": y_test_split, "y_pred": y_pred}
 
         return results
